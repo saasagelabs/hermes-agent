@@ -1,18 +1,18 @@
 name: twring
 title: Twring
 repo: https://github.com/saasagelabs/twring
-sha: c7f00ccf32392a68a5d2a9dffa1a1c01e8e1d188
+sha: 50fff2070e0b983126d7e9da931fb4a5922ec5a5
 subdir: integrations/hermes
 tier: community
 category: platform
 maintainer: saasagelabs
-version: "0.1.3"
+version: "0.2.0"
 requires_hermes: ">=0.23.1"
-description: "Call your Hermes from your phone and let it call you back, through the Twring app (iPhone and Android): live two-way voice calls and typed chat in one Hermes conversation, dangerous-command approvals answered by voice or tap through Hermes's own approval card, and a phone ring when a scheduled job delivers. Twring does the speech; Hermes keeps its model, memory and tools. Disclosure — while the gateway runs, one outbound WebSocket to the linked Twring server (api.twring.com by default, or the TWRING_SERVER you set) carries call and chat turn text in, and Hermes's replies, approval questions (command preview and reason) and cron results out, plus the name and success or failure of each tool Hermes runs while a call or chat turn is in progress (never its arguments or output; Hermes's tool hooks are global, so a tool another chat runs at the same moment can be reported too; the pre_tool_call and post_tool_call hooks never block or change a tool); anyone signed in to the linked Twring account drives this Hermes as its owner and can approve one dangerous command at a time by voice or tap through Hermes's own approval card; HTTPS calls to the same server link the account (sending this computer's hostname as its name), post replies to the chat and ring the phone (cron results ring by default; TWRING_RING_ON_DELIVERY=false turns it off); one link token (TWRING_TOKEN), saved by `hermes twring link` through Hermes's .env route; no files of its own, no shell commands, no telemetry, no self-update."
-docs_url: https://github.com/saasagelabs/twring/blob/c7f00ccf32392a68a5d2a9dffa1a1c01e8e1d188/integrations/hermes/README.md
-image: https://raw.githubusercontent.com/saasagelabs/twring/c7f00ccf32392a68a5d2a9dffa1a1c01e8e1d188/integrations/hermes/assets/banner.png
+description: "Call your Hermes from your phone and let it call you back, through the Twring app (iPhone and Android): live two-way voice calls and typed chat in one Hermes conversation, dangerous-command approvals answered by voice or tap, and Hermes can message you or ring your phone from any chat, the terminal or a scheduled job. Twring does the speech; Hermes keeps its model, memory and tools. Disclosure: while the gateway runs, one outbound WebSocket to the linked Twring server (api.twring.com by default, or the TWRING_SERVER you set) carries call and chat turn text in, and Hermes's replies, approval questions (command preview and reason) and cron results out, plus the name and success or failure of each tool Hermes runs while a call or chat turn is in progress (never its arguments or output; Hermes's tool hooks are global, so a tool another chat runs at the same moment can be reported too). Two tools, twring_message_owner and twring_ring_owner, let Hermes post to the owner's Twring chat or ring their phone from any surface; they show only while this Hermes is linked. Phone approvals: `hermes twring link` asks whether to approve Hermes's commands from the phone (`hermes twring approvals on|off|status` changes it). When on, every approval from any surface sends the command (after Hermes's redaction), its reason and where it came from to the same server over HTTPS (POST, GET long-poll and DELETE on /v1/connectors/approvals) and waits for Allow or Deny; long commands, private chats, expiry and an unreachable server fall back to Hermes's own prompt or deny, never approve. The pre_approval_request and post_approval_response hooks ring the owner once when an approval at the computer waits 60 s (never the command text); api_request_error tells the owner when a scheduled job stops on an error (the error type only). No hook blocks or changes anything. Anyone signed in to the linked Twring account drives this Hermes as its owner. HTTPS calls to the same server link the account (sending this computer's hostname as its name), post replies and ring the phone (cron results ring by default; TWRING_RING_ON_DELIVERY=false turns it off); one link token (TWRING_TOKEN), saved by `hermes twring link` through Hermes's .env route; no files of its own, no shell commands, no telemetry, no self-update."
+docs_url: https://github.com/saasagelabs/twring/blob/50fff2070e0b983126d7e9da931fb4a5922ec5a5/integrations/hermes/README.md
+image: https://raw.githubusercontent.com/saasagelabs/twring/50fff2070e0b983126d7e9da931fb4a5922ec5a5/integrations/hermes/assets/banner.png
 capabilities:
-  provides_tools: []
-  provides_hooks: [pre_tool_call, post_tool_call]
+  provides_tools: [twring_ring_owner, twring_message_owner]
+  provides_hooks: [pre_tool_call, post_tool_call, pre_approval_request, post_approval_response, api_request_error]
   provides_middleware: []
   requires_env: [TWRING_TOKEN]
